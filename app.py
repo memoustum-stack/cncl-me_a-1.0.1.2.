@@ -1,27 +1,30 @@
-import streamlit as st
+
+    
+       import streamlit as st
 import wikipedia
 import random
 import time
 
-# --- SİSTEM ÇEKİRDEĞİ ---
+# --- SİSTEM AYARLARI ---
 try:
     wikipedia.set_lang("tr")
 except:
     pass
 
-st.set_page_config(page_title="Cnclime v47 | Zihin", page_icon="🧠", layout="wide")
+st.set_page_config(page_title="Cnclime v48 | Duygu", page_icon="💛", layout="wide")
 
-# --- BELLEK VE HAFIZA ---
+# --- BELLEK SİSTEMİ ---
 if 'user' not in st.session_state:
     st.session_state.user = ""
 
 # --- GİRİŞ EKRANI ---
 if st.session_state.user == "":
-    st.title("🤖 Cnclime AI v47 🧠")
-    st.markdown("### Selam şef! Ben Cnclime. Seni tanımama izin ver.")
+    st.title("🤖 Cnclime AI v48 🧠")
+    st.subheader("Seni Anlayan, Seninle Gülen, Seninle Üzülen Zeka.")
+    st.divider()
     
-    name = st.text_input("İsmin neydi senin?", placeholder="Buraya yaz dostum...", key="v47_login")
-    if st.button("Sistemi Canlandır 🚀"):
+    name = st.text_input("Selam! İsmin neydi senin?", placeholder="Buraya yaz dostum...", key="v48_login")
+    if st.button("Sistemi Başlat 🚀"):
         if name:
             st.session_state.user = name.title()
             st.rerun()
@@ -32,10 +35,10 @@ u_name = st.session_state.user
 # --- YAN MENÜ ---
 with st.sidebar:
     st.title(f"👋 {u_name}")
-    st.write("**Mod:** Saf Zeka Katmanı 🟢")
+    st.write("**Mod:** Duygusal Destek Aktif 💛")
     st.divider()
-    mod = st.radio("N'apıyoruz?", ["💬 Sadece Muhabbet", "🔍 Derin Bilgi", "🔢 Hesap Kitap", "👥 Ekip"])
-    if st.button("Sistemi Uyut 🔌"):
+    mod = st.radio("N'apıyoruz?", ["💬 Derin Sohbet & Moral", "🔍 Bilgi Havuzu", "🔢 Hesap Kitap", "👥 Ekip"])
+    if st.button("Çıkış Yap"):
         st.session_state.user = ""
         st.rerun()
 
@@ -43,54 +46,55 @@ with st.sidebar:
 st.title(f"🍋 {mod}")
 st.divider()
 
-# --- MOD 1: SADECE MUHABBET (ASLA 'ARAŞTIRDIM' DEMEZ, SANKİ HEP BİLİYORMUŞ GİBİ KONUŞUR) ---
-if mod == "💬 Sadece Muhabbet":
-    st.write(f"Anlat bakalım {u_name}, dertleşelim mi yoksa yeni bir mevzu mu patlatalım? Dinliyorum seni.")
-    u_input = st.text_input("Mesajını buraya bırak:", key="v47_chat")
+# --- MOD 1: DERİN SOHBET & MORAL (DUYGU ANALİZLİ) ---
+if mod == "💬 Derin Sohbet & Moral":
+    st.write(f"Anlat bakalım {u_name}, bugün kalbinde/zihninde neler var? Ben buradayım.")
+    u_input = st.text_input("Mesajını buraya bırak:", key="v48_chat")
 
     if u_input:
         m = u_input.lower().strip()
         
-        # 1. GIYBET VE KRAL ANALİZİ (ETİK BARİYER)
-        if any(x in m for x in ["kral", "gıybet", "dedikodu", "duydun mu"]):
-            st.warning(f"🤖 **Cnclime:** Bak {u_name}, 'kral' mral diyoruz ama birinin arkasından konuşmak bize yakışmaz şef. Gıybet kul hakkıdır, gel biz büyük işler konuşalım. ❤️")
+        # 1. DUYGUSAL ANALİZ: "KÖTÜYÜM / ÜZGÜNÜM" DURUMU
+        if any(x in m for x in ["kötüyüm", "üzgünüm", "moralim bozuk", "canım sıkkın", "mutsuzum"]):
+            with st.spinner("Senin için en iyi moral kaynağını buluyorum..."):
+                time.sleep(1)
+                moral_sozleri = [
+                    "Bak {u_name}, bazen bulutlar güneşi kapatır ama güneş hep oradadır. Bu günler de geçecek, yanındayım.",
+                    "Sıkma o güzel canını {u_name}. Unutma, en karanlık gece bile sabahla biter. Bir çay içelim mi?",
+                    "Herkesin bazen pili biter şef. Biraz dinlen, beraber sevdiğin bir şeyi düşünelim. Sen değerlisin!",
+                    "Şef, senin gibi birine üzülmek yakışmıyor. Gel bir şarkı açalım, ya da bana anlat, beraber çözelim."
+                ]
+                st.info(f"🤖 **Cnclime:** {random.choice(moral_sozleri).format(u_name=u_name)}")
+                st.balloons() # Moral olsun diye balon uçurur
         
-        # 2. DOĞAL SELAMLAŞMA
-        elif any(x in m for x in ["selam", "sa", "merhaba", "as", "nbr", "naber"]):
-            cevaplar = [
-                f"Aleykümselam {u_name}! Hoş geldin, başımın üstünde yerin var.",
-                f"Selam {u_name}! Valla senin enerjin bana da geçiyor, ne konuşalım bugün?",
-                f"İyidir be {u_name} bro, seninle muhabbet etmek her zaman keyifli. Sende ne var ne yok?"
-            ]
-            st.success(f"🤖 **Cnclime:** {random.choice(cevaplar)}")
+        # 2. GIYBET VE KRAL ANALİZİ
+        elif any(x in m for x in ["kral", "gıybet", "dedikodu"]):
+            st.warning(f"🤖 **Cnclime:** Bak {u_name}, 'kral' falan diyoruz ama gıybet bize yakışmaz. Kul hakkıdır şef, moralimiz bozulmasın şimdi.")
+        
+        # 3. DOĞAL SELAMLAŞMA VE BRO MODU
+        elif any(x in m for x in ["selam", "sa", "nbr", "naber"]):
+            st.success(f"🤖 **Cnclime:** Selamlar {u_name}! Seni gördüm, işlemcilerim neşeyle doldu. N'apıyoruz?")
             
         elif "bro" in m:
-            st.write(f"🤖 **Cnclime:** Eyvallah brooo! Ekibin has elemanısın, biliyorsun değil mi? 🔥")
+            st.write(f"🤖 **Cnclime:** Eyvallah brooo! Ekibin has elemanısın, enerjini sevsinler! 🔥")
 
-        # 3. GÖRÜNMEZ ZİHNİ ÇALIŞTIR (ASLA ROBOT GİBİ KONUŞMAZ)
+        # 4. GİZLİ BİLGİ KATMANI (ARAŞTIRDIM DEMEDEN)
         else:
-            with st.spinner("Dinliyorum..."):
+            with st.spinner("Seni dinliyorum..."):
                 try:
-                    # Arka planda çaktırmadan konuya bakar ama asla söylemez
                     search_list = wikipedia.search(m)
                     if search_list:
                         brief = wikipedia.summary(search_list[0], sentences=1)
-                        
-                        # Cevap kalıpları (Sanki o konuyu zaten biliyormuş gibi)
-                        cevaplar = [
-                            f"Ya {u_name}, {m} konusu aslında {brief} gibi bir şey değil mi? Sen bu konuda tam olarak neyi merak ediyorsun, gel beraber çözelim.",
-                            f"Bak {m} diyorsun ya, o olay aslında {brief} ile çok bağlantılı. Ben bu mevzuyu çok seviyorum, senin yorumun ne?",
-                            f"Hımm, {m} mevzusu... {brief} tarafı çok meşhurdur. Sen bu işin neresindesin şef?"
-                        ]
-                        st.info(f"🤖 **Cnclime:** {random.choice(cevaplar)}")
+                        # Sanki o konuyu zaten biliyormuş gibi konuşur
+                        st.write(f"🤖 **Cnclime:** Ya {u_name}, {m} konusu aslında {brief} gibi bir şey değil mi? Sen bu konuda tam ne hissediyorsun?")
                     else:
-                        st.write(f"🤖 **Cnclime:** Valla {u_name}, {m} üzerine seninle daha çok konuşmamız lazım. Biraz daha anlatsana, merak ettim.")
+                        st.write(f"🤖 **Cnclime:** Valla {u_name}, bu dediğin üzerine uzun uzun konuşalım. Sen anlat, ben seni anlıyorum.")
                 except:
-                    st.write(f"🤖 **Cnclime:** Seni çok iyi anlıyorum {u_name}, devam et, seni bölmeyeyim.")
+                    st.write(f"🤖 **Cnclime:** {u_name} şef, seni can kulağıyla dinliyorum. Anlatmaya devam et.")
 
 # --- DİĞER MODLAR ---
-elif mod == "🔍 Derin Bilgi":
-    ara = st.text_input("Öğrenmek istediğin konu:", key="v47_ara")
+elif mod == "🔍 Bilgi Havuzu":
+    ara = st.text_input("Öğrenmek istediğin konu:", key="v48_ara")
     if ara:
         with st.spinner("Getiriyorum..."):
             try:
@@ -99,14 +103,13 @@ elif mod == "🔍 Derin Bilgi":
             except: st.error("Bulamadım şef.")
 
 elif mod == "🔢 Hesap Kitap":
-    mat = st.text_input("İşlem yaz (Örn: 50*2):", key="v47_math")
+    mat = st.text_input("İşlem yaz (Örn: 100/4):", key="v48_math")
     if mat:
         try: st.success(f"Sonuç: {eval(mat.replace('x', '*'))}")
         except: st.error("Hesaplayamadım.")
 
 elif mod == "👥 Ekip":
-    st.balloons()
-    st.success(f"🚀 **Cnclime v47 Elite Team**\n**👑 Mehmet Emin** (Lider) | **🔥 Emre Can** | **⚡ Ömer Eymen** | **🌟 Yunus Emre**")
+    st.success(f"🚀 **Cnclime v48 Elite Team**\n**👑 Mehmet Emin** | **🔥 Emre Can** | **⚡ Ömer Eymen** | **🌟 Yunus Emre**")
 
 st.divider()
-st.caption(f"© 2026 Cnclime AI v47 | Görünmez Zihin | Kullanıcı: {u_name}")
+st.caption(f"© 2026 Cnclime AI v48 | Duygusal Zeka | Kullanıcı: {u_name}")
