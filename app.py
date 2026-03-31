@@ -72,4 +72,49 @@ elif secim == "Yapay Zekaya Resim Çizdir":
                 image = Image.open(io.BytesIO(image_bytes))
                 st.image(image, caption=f"Cnclime Çizimi: {istek}")
             except:
-                st.error("Resim çizme sunucusu şu an meşgul. Lütfen biraz sonra tekrar dene.")
+                st.error("Resim çizme sunucusu şu an meşgul. Lütfen biraz sonra tekrar dene.")import streamlit as st
+import wikipedia
+
+# Wikipedia dil ayarı
+wikipedia.set_lang("tr")
+
+st.set_page_config(page_title="Cnclime Sohbet Robotu", page_icon="💬")
+
+st.title("💬 Cnclime: Akıllı Asistan")
+st.sidebar.info("Geliştiriciler: Mehmet Emin, Emre Can, Ömer Eymen, Yunus Emre")
+
+# Kullanıcıdan gelen mesaj
+mesaj = st.text_input("Cnclime'a bir şey yaz:", placeholder="Nasılsın? / İyiyim / Naber?")
+
+if mesaj:
+    m = mesaj.lower().strip() # Mesajı küçük harf yap ve boşlukları sil
+    
+    # --- KARŞILIKLI DİYALOG KISMI ---
+    
+    if m == "nasılsın" or m == "nasılsın?":
+        st.write("🤖 **Cnclime:** Bomba gibiyim şef! Piksellerim tıkır tıkır çalışıyor. **Peki sen nasılsın?**")
+        st.info("İpucu: 'İyiyim' yazarak cevap verebilirsin!")
+
+    elif m == "iyiyim" or m == "iyi" or m == "çok şükür iyiyim":
+        st.balloons() # Sen iyiysen kutlama yapalım!
+        st.write("🤖 **Cnclime:** Harika! Senin iyi olmana çok sevindim. Mehmet Emin ve ekibi (Emre Can, Ömer Eymen, Yunus Emre) mutluysa ben de mutluyum! 🚀")
+        st.success("Enerji tavan!")
+
+    elif "naber" in m or "ne haber" in m:
+        st.write("🤖 **Cnclime:** İyidir şef, takılıyorum öyle internet kablolarının arasında. Senden naber?")
+
+    elif "merhaba" in m or "selam" in m:
+        st.write("🤖 **Cnclime:** Selam ekip! Bugün neyi araştırıyoruz?")
+
+    # --- İNTERNETTEN ARAŞTIRMA MODU ---
+    else:
+        with st.spinner('Cnclime internette araştırıyor... 🔍'):
+            try:
+                bilgi = wikipedia.summary(mesaj, sentences=2)
+                st.subheader("📖 Bulduğum Bilgi:")
+                st.info(bilgi)
+            except:
+                st.warning("🤖 Bunu tam anlayamadım şef. Ama 'Nasılsın' dersen seninle sohbet edebilirim!")
+
+st.markdown("---")
+st.caption("Cnclime v6.0 - Karşılıklı Sohbet Modülü")
