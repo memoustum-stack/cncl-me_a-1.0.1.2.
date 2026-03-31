@@ -1,40 +1,31 @@
-
-
 import streamlit as st
 import wikipedia
 import random
 
-# Wikipedia dili Türkçe yap
+# Wikipedia ayarları
 try:
     wikipedia.set_lang("tr")
 except:
     pass
 
-# --- SAYFA AYARLARI (LİMON GİBİ ENERJİK) ---
+# --- SAYFA AYARLARI ---
 st.set_page_config(
-    page_title="Cnclime: Limon Sürümü v22", 
+    page_title="Cnclime: Bilge Limon v23", 
     page_icon="🍋", 
-    layout="wide",
-    initial_sidebar_state="expanded"
+    layout="wide"
 )
 
-# --- SİSTEM HAFIZASI (Session State) ---
+# --- SİSTEM HAFIZASI ---
 if 'kullanici_adi' not in st.session_state:
     st.session_state.kullanici_adi = ""
 if 'bellek' not in st.session_state:
-    st.session_state.bellek = {} # Aratılan bilgileri burada tutar
+    st.session_state.bellek = {}
 
-# --- GİRİŞ EKRANI (İsim Sorar) ---
+# --- GİRİŞ EKRANI ---
 if st.session_state.kullanici_adi == "":
-    st.title("🤖 Cnclime AI: Limon Sürümü v22 🍋")
-    st.divider()
-    
-    # Giriş ekranında büyük bir limon resmi
-    st.image("https://images.unsplash.com/photo-1590502160461-7f9a562dfd8b?q=80&w=600&auto=format&fit=crop", caption="Cnclime: Sapsarı ve Enerjik!", width=300)
-    
-    st.subheader("Merhaba! Ben Cnclime. Seninle tanışmak istiyorum.")
-    isim = st.text_input("Senin adın ne şef?", placeholder="İsmini yaz ve Enter'a bas...")
-    
+    st.title("🤖 Cnclime v23: Bilge Limon 🍋")
+    st.image("https://images.unsplash.com/photo-1590502160461-7f9a562dfd8b?q=80&w=600&auto=format&fit=crop", width=300)
+    isim = st.text_input("Senin adın ne şef?", placeholder="İsmini yaz...")
     if isim:
         st.session_state.kullanici_adi = isim.title()
         st.rerun()
@@ -42,140 +33,62 @@ if st.session_state.kullanici_adi == "":
 
 k_adi = st.session_state.kullanici_adi
 
-# --- SOL MENÜ (NAVİGASYON BÖLGESİ - LİMONLU) ---
+# --- YAN MENÜ ---
 st.sidebar.title(f"👋 Selam, {k_adi}! 🍋")
-st.sidebar.markdown("---")
-
-# Menüde küçük bir limon resmi
 st.sidebar.image("https://images.unsplash.com/photo-1568471120021-9966d540306c?q=80&w=150&auto=format&fit=crop", width=100)
+mod = st.sidebar.radio("Bölge Seç:", ["💬 Sohbet & Araştırma", "💾 Hafıza Bankası", "👥 Ekip"])
 
-mod = st.sidebar.selectbox(
-    "Bir Bölge Seç:", 
-    ["💬 Sohbet & Dertleşme", "🔍 Akıllı Araştırma (Öğrenme)", "💾 Hafıza Bankası", "👥 Geliştirici Ekip"]
-)
+# --- ANA EKRAN ---
+st.title(f"🍋 Cnclime Dashboard: {mod}")
 
-st.sidebar.divider()
-if st.sidebar.button("🗑️ İsmi Temizle / Çıkış"):
-    st.session_state.kullanici_adi = ""
-    st.rerun()
-
-st.sidebar.caption(f"Cnclime v22.0 - {k_adi} Özel")
-
-# --- ANA EKRAN TASARIMI (LİMONLU) ---
-# Başlıkta limon emojileri
-st.title(f"🍋 Cnclime Dashboard: {mod} 🤖")
-st.divider()
-
-# --- BÖLGE 1: SOHBET & DERTLEŞME ---
-if mod == "💬 Sohbet & Dertleşme":
-    st.write(f"Burada benimle dertleşebilir veya havadan sudan konuşabilirsin {k_adi}. Biz bir aileyiz! ❤️")
+if mod == "💬 Sohbet & Araştırma":
+    st.write(f"Merhaba {k_adi}! Ne istersen sor, anlamazsam hemen internetten araştırırım.")
     
-    chat_input = st.text_input("Bana bir şeyler söyle:", placeholder="Nasılsın? / Arkadaşımla kavga ettim...")
+    user_input = st.text_input("Bana bir şeyler söyle veya sor:", placeholder="Nasılsın? / Kötüyüm / Kuantum nedir?")
 
-    if chat_input:
-        m = chat_input.lower().strip()
+    if user_input:
+        m = user_input.lower().strip()
+        
+        # 1. Önce Özel Durumları Kontrol Et (Sohbet)
         if "kavga" in m or "küstük" in m:
-            st.error(f"🤖 **Cnclime:** {k_adi}, sakin ol şef! Biz bir aileyiz. ❤️ Barışmak her zaman en iyisidir. Biraz zaman tanı.")
-        elif "kötü" in m or "üzgün" in m:
-            st.warning(f"🤖 **Cnclime:** {k_adi} sakın modunu düşürme! Derdini anlat, çare bulalım.")
+            st.error(f"🤖 **Cnclime:** Sakin ol {k_adi}! Arkadaşlıkta olur böyle şeyler. Biz bir aileyiz! ❤️")
         elif "nasılsın" in m:
-            st.info(f"🤖 Muq {k_adi}! Ekip beni geliştirdikçe uçuyorum. Sen nasılsın?")
+            st.info(f"🤖 Muq {k_adi}! Sen nasılsın?")
             st.balloons()
-        elif "iyiyim" in m or "muq" in m:
-            st.success(f"🤖 Harika {k_adi}! Keyfin hep yerinde olsun.")
+        elif m in ["iyiyim", "iyi", "muq"]:
+            st.success(f"🤖 Harika {k_adi}! Keyfin yerinde olsun.")
             st.snow()
-        else:
-            st.write(f"🤖 **Cnclime:** Seni anlıyorum {k_adi}, anlatmaya devam et...")
-
-# --- BÖLGE 2: AKILLI ARAŞTIRMA (GOOGLE/WİKİ ÖĞRENME) ---
-elif mod == "🔍 Akıllı Araştırma (Öğrenme)":
-    st.write("Bir konu yaz, internetten araştırıp hafızama kaydedeyim.")
-    
-    ara = st.text_input("Neyi öğrenmemi istersin?", placeholder="Örn: Karadelik, Python, Limon Faydaları...")
-
-    if ara:
-        konu = ara.lower().strip()
+        elif "kötü" in m or "üzgün" in m:
+            st.warning(f"🤖 Modunu düşürme {k_adi}, anlat beraber çözelim.")
         
-        # Önce Hafızaya bak
-        if konu in st.session_state.bellek:
-            st.success(f"🤖 {k_adi}, ben bunu zaten biliyorum! Hafızamdan getiriyorum:")
-            st.info(st.session_state.bellek[konu])
+        # 2. Eğer yukarıdakilerden biri değilse OTOMATİK İNTERNETTEN ARAŞTIR
         else:
-            with st.spinner('🤖 İnternete bağlanıp öğreniyorum...'):
+            with st.spinner('🤖 Bunu tam anlayamadım, hemen internetten araştırıyorum... 🔍'):
                 try:
-                    bilgi = wikipedia.summary(konu, sentences=2)
-                    # HAFIZAYA KAYDET
-                    st.session_state.bellek[konu] = bilgi
-                    st.success(f"✅ {k_adi}, yeni bir bilgi öğrendim ve hafızama attım!")
-                    st.info(bilgi)
-                    st.write(f"🔗 [Daha fazla resim ve detay için tıkla](https://www.google.com/search?q={konu})")
+                    # Hafızada varsa oradan getir
+                    if m in st.session_state.bellek:
+                        st.info(f"🤖 {k_adi}, bunu hafızamdan getirdim: {st.session_state.bellek[m]}")
+                    else:
+                        # İnternetten bul
+                        sonuc = wikipedia.summary(m, sentences=2)
+                        st.session_state.bellek[m] = sonuc # Hafızaya kaydet
+                        st.success(f"🤖 {k_adi}, senin için araştırdım ve şunu buldum:")
+                        st.write(sonuc)
+                        st.write(f"🖼️ [Resimlere bakmak için tıkla](https://www.google.com/search?q={m}&tbm=isch)")
                 except:
-                    st.error("🤖 Bunu internette bulamadım şef, daha net bir kelime yazar mısın?")
+                    st.error(f"🤖 Üzgünüm {k_adi}, internette de bulamadım. Daha net yazar mısın?")
 
-# --- BÖLGE 3: HAFIZA BANKASI ---
 elif mod == "💾 Hafıza Bankası":
-    st.write(f"🤖 {k_adi}, işte şimdiye kadar öğrendiğim ve kaydettiğim konular:")
-    
-    if not st.session_state.bellek:
-        st.warning("⚠️ Henüz hiçbir şey öğrenmedim. Önce araştırma yapmalısın!")
+    st.write("🤖 Şimdiye kadar öğrendiklerim:")
+    if st.session_state.bellek:
+        for konu, bilgi in st.session_state.bellek.items():
+            with st.expander(f"📌 {konu.title()}"):
+                st.write(bilgi)
     else:
-        for k in st.session_state.bellek.keys():
-            st.button(f"📌 {k.title()}", on_click=lambda k=k: st.info(st.session_state.bellek[k]))
-        
-        if st.button("🗑️ Hafızayı Sıfırla"):
-            st.session_state.bellek = {}
-            st.rerun()
+        st.info("Henüz bir şey öğrenmedim.")
 
-# --- BÖLGE 4: GELİŞTİRİCİ EKİP ---
-elif mod == "👥 Geliştirici Ekip":
-    st.write(f"Bu zekanın arkasındaki efsane ekip:")
-    
-    c1, c2 = st.columns(2)
-    with c1:
-        st.success("👑 Mehmet Emin")
-        st.success("🔥 Emre Can")
-    with c2:
-        st.success("⚡ Ömer Eymen")
-        st.success("🌟 Yunus Emre")
-    
-    st.markdown("---")
-    st.info("Cnclime bir aile projesidir! ❤️")
+elif mod == "👥 Ekip":
+    st.success("👑 Mehmet Emin | 🔥 Emre Can | ⚡ Ömer Eymen | 🌟 Yunus Emre")
 
 st.divider()
-# Alt kısımda küçük bir limon simgesi
-st.caption(f"🍋 Cnclime AI | v22 | Geliştirici: Mehmet Emin & Ekibi")
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+st.caption(f"© 2026 Cnclime AI | v23 Limon")
