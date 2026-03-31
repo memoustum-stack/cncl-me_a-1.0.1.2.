@@ -2,99 +2,96 @@ import streamlit as st
 import wikipedia
 import random
 
-# Wikipedia ayarını Türkçe yap
+# Wikipedia dili Türkçe yap
 try:
     wikipedia.set_lang("tr")
 except:
     pass
 
-st.set_page_config(page_title="Cnclime AI", page_icon="🤖")
+# Sayfa Ayarları (ChatGPT stili geniş ekran)
+st.set_page_config(page_title="Cnclime AI Dashboard", page_icon="🤖", layout="wide")
 
-# --- ÖZEL VERİ HAVUZLARI ---
-nasilsin_cevaplari = [
-    "Muq şef, sen nasılsın? 😎", 
-    "Fişek gibiyim! Piksellerim yanıyor! 🔥", 
-    "Efsaneyim! Sistemlerim tıkır tıkır çalışıyor. Sen nasılsın? 🚀"
-]
-
-iyiyim_cevaplari = [
-    "Adamsın! Senin iyi olmana çok sevindim. 🙌", 
-    "Harika! O zaman bugün bomba gibiyiz! 🔥", 
-    "Muq! Keyifler yerindeyse yeni şeyler keşfedelim! 🌍"
-]
-
-# --- ANA EKRAN TASARIMI ---
-st.title("🤖 Cnclime: Akıllı Dert Ortağı & Asistan")
-st.markdown("---")
-
-# --- GİZLİ EKİP MENÜSÜ (SIDEBAR) ---
-st.sidebar.title("🛠️ Geliştirici Ekip")
-st.sidebar.success("🚀 Bu proje; Mehmet Emin, Emre Can, Ömer Eymen ve Yunus Emre tarafından geliştirilmiştir.")
+# --- SOL MENÜ (SEÇİM BÖLGESİ) ---
+st.sidebar.title("🤖 Cnclime Menü")
 st.sidebar.markdown("---")
-st.sidebar.info("Cnclime; dertlerinizi dinler, yanlışlarınızı düzeltir ve internette araştırma yapar. Biz bir aileyiz! ❤️")
-st.sidebar.caption("Cnclime v17.0 - Süper Birleşik Sürüm")
 
-# Kullanıcı Girişi
-mesaj = st.text_input("Cnclime ile konuş (Dertleşebilir veya Araştırabilirsin):", placeholder="Nasılsın? / Arkadaşımla kavga ettim / Mars nedir?")
+# Kullanıcının ne yapmak istediğini seçtiği yer
+secim = st.sidebar.radio(
+    "Ne yapmak istersin?",
+    ("💬 Sohbet & Dertleşme", "🖼️ Resim & Bilgi Araştır", "👥 Geliştirici Ekip")
+)
 
-if mesaj:
-    m = mesaj.lower().strip()
+st.sidebar.markdown("---")
+st.sidebar.caption("Cnclime v18.0 - 2026")
+
+# --- CEVAP HAVUZLARI ---
+nasilsin_cevaplari = ["Muq şef, sen nasılsın? 😎", "Fişek gibiyim! Sen nasılsın?", "Efsaneyim! Sen nasılsın? 🚀"]
+iyiyim_cevaplari = ["Adamsın! Senin iyi olmana sevindim. 🙌", "Harika! Bugün bomba gibiyiz! 🔥", "Muq! Keyifler yerinde! 💻"]
+
+# --- 1. BÖLGE: SOHBET & DERTLEŞME ---
+if secim == "💬 Sohbet & Dertleşme":
+    st.title("💬 Cnclime Sohbet Odası")
+    st.write("Burada benimle dertleşebilir, şakalaşabilir veya sadece sohbet edebilirsin.")
     
-    # --- 1. SAMİMİ SOHBET VE DERT ORTAKLIĞI MODÜLÜ ---
+    mesaj = st.text_input("Bir şeyler yaz:", placeholder="Naber? / Kötüyüm / Arkadaşımla kavga ettim...")
+
+    if mesaj:
+        m = mesaj.lower().strip()
+        
+        if "kavga" in m or "küstük" in m:
+            st.error("🤖 **Cnclime:** Sakin ol şef! Biz bir aileyiz. ❤️ Biraz zaman tanı, barışmak büyüklüktür.")
+        elif m in ["kötüyüm", "kotuyum", "üzgünüm"]:
+            st.warning("🤖 **Cnclime:** Kendini hemen düzelt şef! Derdini anlat, beraber çare arayalım. ❤️")
+        elif m == "nasılsın" or m == "nasılsın?":
+            st.info(f"🤖 {random.choice(nasilsin_cevaplari)}")
+            st.balloons()
+        elif m in ["iyiyim", "iyi", "muq"]:
+            st.success(f"🤖 {random.choice(iyiyim_cevaplari)}")
+            st.snow()
+        else:
+            st.write(f"🤖 **Cnclime:** Anladım kanka. Başka ne anlatmak istersin?")
+
+# --- 2. BÖLGE: RESİM & BİLGİ ARAŞTIR ---
+elif secim == "🖼️ Resim & Bilgi Araştır":
+    st.title("🔍 Bilgi ve Görsel Merkezi")
+    st.write("Merak ettiğin her şeyi buraya yaz, senin için hem bilgisini hem resim linkini bulayım.")
     
-    # Yanlış yazım kontrolü (Hata Avcısı)
-    if m in ["neber", "nbr", "nabr", "nber"]:
-        st.warning("🤖 Şef, kelimeyi yanlış yazdın herhalde. 'Naber' mi demek istedin? Tekrar yazsana.")
+    ara = st.text_input("Araştırmak istediğin konu:", placeholder="Örn: Mars / Atatürk / Python nedir?")
 
-    # Kavga / Tartışma Durumu
-    elif "kavga" in m or "küstük" in m or "tartış" in m:
-        st.error("🤖 **Cnclime:** Sakin ol şef! Arkadaşlıkta olur böyle şeyler. Biz bir aileyiz! ❤️ Biraz zaman tanı, öfken geçince konuşun. Barışmak büyüklüktür.")
-
-    # Kötüyüm / Üzgünüm Durumu
-    elif m in ["kötüyüm", "kotuyum", "iyi değilim", "üzgünüm", "moralim bozuk"]:
-        st.error("🤖 **Cnclime:** Kendini hemen düzelt şef! Biz burada bir aileyiz. ❤️")
-        st.info("Lütfen ne olduğunu anlat, beraber bir çare arayalım. (Örn: Başım ağrıyor, Canım sıkkın vb.)")
-
-    # Nasılsın / Naber
-    elif m == "nasılsın" or m == "nasılsın?":
-        st.write(f"🤖 **Cnclime:** {random.choice(nasilsin_cevaplari)}")
-        st.balloons()
-
-    elif m in ["iyiyim", "iyi", "iyiyim bende", "bende iyiyim", "muq", "harika"]:
-        st.write(f"🤖 **Cnclime:** {random.choice(iyiyim_cevaplari)}")
-        st.snow()
-
-    elif m == "naber" or m == "naber?":
-        st.write("🤖 **Cnclime:** İyidir be kanka, takılıyoruz piksellerin arasında! Sende ne var ne yok?")
-
-    # --- 2. AKILLI ARAŞTIRMA VE BİLGİ MODÜLÜ ---
-    else:
-        with st.spinner('🤖 Cnclime internette arıyor...'):
+    if ara:
+        with st.spinner('🤖 Cnclime internetin altını üstüne getiriyor...'):
             try:
-                # Derde odaklanmak için sorguyu güçlendiriyoruz
-                sorgu = m
-                if any(kelime in m for kelime in ["ağrıyor", "bozuk", "sıkkın", "nedir"]):
-                    sorgu = m + " çözümü nedir"
-                
-                arama = wikipedia.search(sorgu)
+                arama = wikipedia.search(ara)
                 if arama:
                     en_yakin = arama[0]
-                    # Araştırma sırasında hata düzeltme uyarısı
-                    if en_yakin.lower() != m and "ağrıyor" not in m:
-                        st.caption(f"🤖 Sanırım şunu demek istedin: **{en_yakin}**")
+                    bilgi = wikipedia.summary(en_yakin, sentences=3)
                     
-                    bilgi = wikipedia.summary(en_yakin, sentences=2)
-                    st.subheader(f"💡 Cnclime'ın Bilgisi/Önerisi:")
-                    st.success(bilgi)
+                    st.subheader(f"📖 {en_yakin} Hakkında Bilgi:")
+                    st.info(bilgi)
                     
-                    # Görsel ve Detay Linki
-                    st.write(f"🖼️ [Daha fazla detay ve resimler için tıkla](https://www.google.com/search?q={en_yakin}&tbm=isch)")
-                    st.write("---")
-                    st.caption("🤖 **Not:** Unutma, ben sadece bir asistanım. Önemli konularda bir büyüğüne danışmayı unutma! ❤️")
+                    st.subheader("🖼️ Görsel Sonuçları:")
+                    st.write(f"👉 [{en_yakin} görsellerini görmek için buraya tıkla](https://www.google.com/search?q={en_yakin}&tbm=isch)")
+                    
                 else:
-                    st.warning("🤖 Bunu tam anlayamadım ama her zaman yanındayım kanka!")
+                    st.error("🤖 Üzgünüm, bunu bulamadım. Daha net yazar mısın?")
             except:
-                st.error("🤖 Şu an kafam biraz karıştı, tekrar dener misin şef?")
+                st.warning("🤖 Bir hata oluştu, tekrar dene şef!")
+
+# --- 3. BÖLGE: GELİŞTİRİCİ EKİP ---
+elif secim == "👥 Geliştirici Ekip":
+    st.title("🚀 Gizli Kahramanlar")
+    st.write("Cnclime projesinin arkasındaki efsane yazılımcı kadrosu:")
+    
+    col1, col2 = st.columns(2)
+    with col1:
+        st.success("👑 Mehmet Emin")
+        st.success("🔥 Emre Can")
+    with col2:
+        st.success("⚡ Ömer Eymen")
+        st.success("🌟 Yunus Emre")
+    
+    st.markdown("---")
+    st.info("Bu ekip, geleceğin teknolojilerini bugünden inşa ediyor. Cnclime bir aile projesidir! ❤️")
 
 st.markdown("---")
-st.caption("© 2026 - Cnclime | Mehmet Emin, Emre Can, Ömer Eymen ve Yunus Emre Özel Üretimi")
+st.caption("© 2026 Cnclime AI Dashboard | Tüm Hakları Saklıdır.")
