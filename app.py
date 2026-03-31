@@ -117,4 +117,59 @@ if mesaj:
                 st.warning("🤖 Bunu tam anlayamadım şef. Ama 'Nasılsın' dersen seninle sohbet edebilirim!")
 
 st.markdown("---")
-st.caption("Cnclime v6.0 - Karşılıklı Sohbet Modülü")
+st.caption("Cnclime v6.0 - Karşılıklı Sohbet Modülü")import streamlit as st
+import wikipedia
+
+# Wikipedia dil ayarı ve arama derinliği
+wikipedia.set_lang("tr")
+
+st.set_page_config(page_title="Cnclime Akıllı Robot", page_icon="🧠")
+
+st.title("🧠 Cnclime: Süper Zeka v7")
+st.sidebar.info("Yazılımcılar: Mehmet Emin, Emre Can, Ömer Eymen, Yunus Emre")
+
+# Kullanıcıdan gelen mesaj
+mesaj = st.text_input("Cnclime'a bir şey yaz veya araştır:", placeholder="Nasılsın? / Atytürk / Mars")
+
+if mesaj:
+    m = mesaj.lower().strip()
+    
+    # --- ÖZEL SOHBET DİLOGLARI ---
+    if m == "nasılsın" or m == "nasılsın?":
+        st.write("🤖 **Cnclime:** Bomba gibiyim şef! Piksellerim tıkır tıkır çalışıyor. **Peki sen nasılsın?**")
+    
+    elif m == "iyiyim" or m == "iyi" or m == "çok şükür iyiyim":
+        st.balloons()
+        st.write("🤖 **Cnclime:** Harika! Senin iyi olmana çok sevindim. Ekip mutluysa ben de mutluyum! 🚀")
+
+    elif "naber" in m:
+        st.write("🤖 **Cnclime:** İyidir şef, takılıyorum öyle internet kablolarının arasında. Senden naber?")
+
+    # --- AKILLI İNTERNET ARAŞTIRMASI (Hata Düzeltmeli) ---
+    else:
+        with st.spinner('Cnclime en doğru bilgiyi arıyor... 🔍'):
+            try:
+                # Önce kelimeyi doğrula veya en yakın sonucu bul
+                arama_sonuclari = wikipedia.search(mesaj)
+                
+                if arama_sonuclari:
+                    # En yakın kelimeyi seç (Hata düzeltme mantığı)
+                    en_yakin_kelime = arama_sonuclari[0]
+                    
+                    if en_yakin_kelime.lower() != m:
+                        st.caption(f"🤖 Bunu mu demek istediniz: **{en_yakin_kelime}**?")
+                    
+                    # Bilgiyi getir
+                    bilgi = wikipedia.summary(en_yakin_kelime, sentences=2)
+                    st.subheader(f"📖 {en_yakin_kelime} Hakkında Bilgi:")
+                    st.info(bilgi)
+                else:
+                    st.warning("🤖 Üzgünüm, internette buna benzer bir şey bulamadım.")
+            
+            except wikipedia.exceptions.DisambiguationError as e:
+                st.warning(f"🤖 Çok fazla sonuç var. Şunlardan birini mi demek istedin: {e.options[:3]}")
+            except:
+                st.error("🤖 Bir hata oluştu veya bu konu bulunamadı şef!")
+
+st.markdown("---")
+st.caption("Cnclime v7.0 - Otomatik Düzeltme ve Global Arama Aktif")
