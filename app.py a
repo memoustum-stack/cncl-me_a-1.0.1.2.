@@ -1,0 +1,43 @@
+import streamlit as st
+import wikipedia
+
+# Araştırma ayarı
+wikipedia.set_lang("tr")
+
+st.set_page_config(page_title="Cnclime AI Pro", page_icon="🤖")
+
+st.title("🤖 Cnclime: Akıllı Asistan")
+st.sidebar.info("Geliştiriciler: Mehmet Emin, Emre Can, Ömer Eymen, Yunus Emre")
+
+# Kullanıcıdan mesaj alma
+soru = st.text_input("Cnclime ile konuş veya bir şey sor:", placeholder="Nasılsın? veya Mars nedir?")
+
+if soru:
+    soru_temiz = soru.lower() # Küçük harfe çeviriyoruz ki hata olmasın
+    
+    # --- ÖZEL CEVAPLAR (Sohbet Kısmı) ---
+    if "nasılsın" in soru_temiz:
+        st.write("🤖 **Cnclime:** İyiyim şef! Mehmet Emin, Emre Can, Ömer Eymen ve Yunus Emre beni her gün daha akıllı yaptığı için çok mutluyum. Sen nasılsın?")
+    
+    elif "merhaba" in soru_temiz or "selam" in soru_temiz:
+        st.write("🤖 **Cnclime:** Selam ekip! Bugün internetin altını üstüne getirmeye hazır mısınız?")
+        
+    elif "kim yaptı" in soru_temiz or "seni kim yazdı" in soru_temiz:
+        st.balloons()
+        st.success("Beni bölgenin en iyi yazılımcı ekibi yaptı: **Mehmet Emin, Emre Can, Ömer Eymen ve Yunus Emre!** 🏆")
+
+    elif "naber" in soru_temiz:
+        st.write("🤖 **Cnclime:** İyidir şef, takılıyorum piksellerin arasında. Sende ne var ne yok?")
+
+    # --- İNTERNETTEN ARAŞTIRMA KISMI ---
+    else:
+        with st.spinner('Cnclime internette araştırıyor... 🔍'):
+            try:
+                bilgi = wikipedia.summary(soru, sentences=2)
+                st.subheader("📖 Bulduğum Bilgi:")
+                st.info(bilgi)
+            except:
+                st.warning("🤖 Bunu tam anlayamadım şef. 'Nasılsın' diyebilirsin veya merak ettiğin bir kelimeyi yazabilirsin!")
+
+st.markdown("---")
+st.caption("Cnclime v3.0 - Akıllı Sohbet ve Araştırma Modülü")
