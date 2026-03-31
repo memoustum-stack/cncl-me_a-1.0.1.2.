@@ -1,0 +1,47 @@
+import streamlit as st
+import wikipedia
+
+# Wikipedia dil ayarı
+wikipedia.set_lang("tr")
+
+st.set_page_config(page_title="Cnclime Sohbet Robotu", page_icon="💬")
+
+st.title("💬 Cnclime: Akıllı Ekip Arkadaşı")
+st.sidebar.info("Yazılımcılar: Mehmet Emin, Emre Can, Ömer Eymen, Yunus Emre")
+
+# Kullanıcıdan gelen mesaj
+mesaj = st.text_input("Cnclime'a bir şey yaz:", placeholder="Naber? / İyiyim / Mars nedir?")
+
+if mesaj:
+    m = mesaj.lower() # Küçük harfe çevir ki her türlü anlasın
+    
+    # --- KARŞILIKLI KONUŞMA (Sohbet) ---
+    if "naber" in m or "ne haber" in m:
+        st.write("🤖 **Cnclime:** İyidir şef! Mehmet Emin, Emre Can, Ömer Eymen ve Yunus Emre beni her gün daha akıllı yaptığı için keyfim yerinde. Senden naber?")
+        st.balloons() # Naber deyince kutlama yapsın!
+
+    elif "iyiyim" in m or "iyi gidiyor" in m:
+        st.write("🤖 **Cnclime:** Harika! Senin iyi olmana çok sevindim şef. Bugün ekipçe yeni bir şeyler öğrenelim mi?")
+        st.success("Süpersin!")
+
+    elif "nasılsın" in m:
+        st.write("🤖 **Cnclime:** Bomba gibiyim! Piksellerim tıkır tıkır çalışıyor. Sen nasılsın?")
+
+    elif "merhaba" in m or "selam" in m:
+        st.write("🤖 **Cnclime:** Selam ekip! Bugün internetin altını üstüne getirmeye hazır mısınız?")
+
+    elif "kim yaptı" in m or "yapımcı" in m:
+        st.write("🤖 **Cnclime:** Beni bu bölgenin en sağlam ekibi yaptı: **Mehmet Emin, Emre Can, Ömer Eymen ve Yunus Emre!** 🏆")
+
+    # --- ARAŞTIRMA MODU (Eğer yukarıdakiler değilse internete bakar) ---
+    else:
+        with st.spinner('Cnclime internette araştırıyor... 🔍'):
+            try:
+                bilgi = wikipedia.summary(mesaj, sentences=2)
+                st.subheader("📖 Bulduğum Bilgi:")
+                st.info(bilgi)
+            except:
+                st.warning("🤖 Bunu tam anlayamadım şef. Ama istersen 'Naber' diyebilirsin!")
+
+st.markdown("---")
+st.caption("Cnclime v5.0 - Mehmet Emin ve Ekibi Özel Sürümü")
