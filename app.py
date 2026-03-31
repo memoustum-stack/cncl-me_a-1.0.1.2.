@@ -2,83 +2,62 @@ import streamlit as st
 import wikipedia
 import random
 
-# Wikipedia ayarını Türkçe yap
+# Wikipedia ayarı
 try:
     wikipedia.set_lang("tr")
 except:
     pass
 
-st.set_page_config(page_title="Cnclime: Muq Edition", page_icon="😎")
+st.set_page_config(page_title="Cnclime: Akıllı Dost v11", page_icon="🤖")
 
-# --- RASTGELE CEVAP HAVUZLARI (Sohbeti Canlandıran Kısım) ---
-nasilsin_cevaplari = [
-    "Muq şef, sen nasılsın? 😎",
-    "Fişek gibiyim! Piksellerim yanıyor! 🔥",
-    "Efsaneyim! Ekip (Mehmet Emin, Emre Can, Ömer Eymen, Yunus Emre) sağ olsun! 🚀",
-    "Bomba gibiyim, internetin altını üstüne getirmeye hazırım! 💣",
-    "Gıcır gıcır çalışıyorum, senin keyifler nasıl? ✨"
-]
+# --- CEVAP HAVUZLARI ---
+nasilsin_cevaplari = ["Muq şef, sen nasılsın? 😎", "Fişek gibiyim! Sen nasılsın?", "Efsaneyim! Ekip sağ olsun. Sen nasılsın? 🚀"]
+iyiyim_cevaplari = ["Adamsın! Senin iyi olmana çok sevindim. 🙌", "Harika! O zaman bugün bomba gibiyiz! 🔥", "Süper! Ekipçe iyi olmanıza sevindim. 👑"]
 
-iyiyim_cevaplari = [
-    "Adamsın! Senin iyi olmana çok sevindim. 👑",
-    "Süper! O zaman bugün yeni bir şeyler öğrenme vakti! 📚",
-    "Harika! Ekip tam kadro iyiyse ben de uçuyorum! ✈️",
-    "Muq haber! Hadi bir şeyler aratalım! 🔍"
-]
-
-# Başlık ve Yan Menü
-st.title("😎 Cnclime: Muq v10")
+st.title("🤖 Cnclime v11")
 st.sidebar.title("🚀 Efsane Kadro")
 st.sidebar.info("Mehmet Emin\n\nEmre Can\n\nÖmer Eymen\n\nYunus Emre")
 
 # Kullanıcı Girişi
-mesaj = st.text_input("Cnclime'a bir şeyler yaz:", placeholder="Nasılsın? / İyiyim / Mars nedir?")
+mesaj = st.text_input("Cnclime'a yaz:", placeholder="Nasılsın? / İyiyim / Naber?")
 
 if mesaj:
     m = mesaj.lower().strip()
     
-    # --- 1. KISIM: SAMİMİ SOHBET MODÜLÜ ---
+    # --- 1. ÖZEL SOHBET VE DÜZELTME MANTIĞI ---
     
-    if m == "nasılsın" or m == "nasılsın?":
-        cevap = random.choice(nasilsin_cevaplari)
-        st.write(f"🤖 **Cnclime:** {cevap}")
-        if "muq" in cevap.lower():
-            st.balloons() # Muq cevabı gelince balonlar uçsun!
+    # Yanlış yazılan "naber" kontrolü (neber, nbr, nabr gibi)
+    if m in ["neber", "nbr", "nabr", "nber"]:
+        st.warning("🤖 Şef, sanırım 'Naber' yazmaya çalıştın ama kelimeyi yanlış yazdın. Tekrar yazar mısın?")
+    
+    elif m == "nasılsın" or m == "nasılsın?":
+        st.write(f"🤖 **Cnclime:** {random.choice(nasilsin_cevaplari)}")
+        st.balloons()
 
-    elif m == "iyiyim" or m == "iyi" or m == "muq":
+    elif m == "iyiyim" or m == "iyi" or m == "iyiyim bende" or m == "bende iyiyim":
         st.write(f"🤖 **Cnclime:** {random.choice(iyiyim_cevaplari)}")
-        st.snow() # İyiysen kar yağsın!
+        st.snow()
 
-    elif "naber" in m:
-        st.write("🤖 **Cnclime:** İyidir be kanka, takılıyoruz piksellerin arasında! Sende ne var ne yok?")
+    elif m == "naber" or m == "naber?":
+        st.write("🤖 **Cnclime:** İyidir kanka, piksellerle uğraşıyorum. Sende ne var ne yok?")
 
-    elif "merhaba" in m or "selam" in m:
-        st.write("🤖 **Cnclime:** Selam ekip! Bugün hangi bilgiyi patlatıyoruz?")
-
-    # --- 2. KISIM: AKILLI ARAŞTIRMA VE HATA DÜZELTME ---
+    # --- 2. ARAŞTIRMA MODÜLÜ ---
     else:
-        with st.spinner('🤖 Cnclime internete dalıyor... 🔍'):
+        with st.spinner('🤖 Cnclime araştırıyor...'):
             try:
-                # İnternette en yakın sonuçları ara
                 arama = wikipedia.search(mesaj)
                 if arama:
                     en_yakin = arama[0]
-                    
-                    # Eğer kullanıcı yanlış yazdıysa uyar (Örn: Atatrk -> Atatürk)
+                    # Araştırmada hata düzeltme
                     if en_yakin.lower() != m:
-                        st.caption(f"🤖 Sanırım şunu demek istedin: **{en_yakin}**")
+                        st.info(f"🤖 Kelimeyi yanlış yazdın herhalde, şunu mu demek istedin: **{en_yakin}**")
                     
-                    # Bilgiyi getir
                     bilgi = wikipedia.summary(en_yakin, sentences=2)
-                    st.subheader(f"📖 {en_yakin} Hakkında Bilgi:")
-                    st.success(bilgi)
-                    
-                    # Resim Linki (Google Görseller'e yönlendirir)
-                    st.write(f"🖼️ [Buraya tıklayarak {en_yakin} resimlerine bakabilirsin](https://www.google.com/search?q={en_yakin}&tbm=isch)")
+                    st.success(f"📖 {en_yakin}: {bilgi}")
                 else:
-                    st.error("🤖 Bunu internette bulamadım kanka, başka bir şey yaz!")
+                    st.error("🤖 Bunu internette bulamadım kanka, bir daha kontrol et!")
             except:
-                st.warning("🤖 Bağlantı koptu veya konu çok karışık şef!")
+                st.warning("🤖 Bağlantı koptu, bir daha yazar mısın?")
 
 st.markdown("---")
-st.caption("Cnclime v10.0 - Mehmet Emin, Emre Can, Ömer Eymen ve Yunus Emre Özel Üretimi")
+st.caption("Cnclime v11.0 - Mehmet Emin & Ekibi")
