@@ -1,43 +1,47 @@
 import streamlit as st
 import wikipedia
 
-# Araştırma ayarı
+# Wikipedia dil ayarı
 wikipedia.set_lang("tr")
 
-st.set_page_config(page_title="Cnclime AI Pro", page_icon="🤖")
+st.set_page_config(page_title="Cnclime Sohbet Robotu", page_icon="💬")
 
-st.title("🤖 Cnclime: Akıllı Asistan")
-st.sidebar.info("Geliştiriciler: Mehmet Emin, Emre Can, Ömer Eymen, Yunus Emre")
+st.title("💬 Cnclime: Akıllı Ekip Arkadaşı")
+st.sidebar.info("Yazılımcılar: Mehmet Emin, Emre Can, Ömer Eymen, Yunus Emre")
 
-# Kullanıcıdan mesaj alma
-soru = st.text_input("Cnclime ile konuş veya bir şey sor:", placeholder="Nasılsın? veya Mars nedir?")
+# Kullanıcıdan gelen mesaj
+mesaj = st.text_input("Cnclime'a bir şey yaz:", placeholder="Naber? / İyiyim / Mars nedir?")
 
-if soru:
-    soru_temiz = soru.lower() # Küçük harfe çeviriyoruz ki hata olmasın
+if mesaj:
+    m = mesaj.lower() # Küçük harfe çevir ki her türlü anlasın
     
-    # --- ÖZEL CEVAPLAR (Sohbet Kısmı) ---
-    if "nasılsın" in soru_temiz:
-        st.write("🤖 **Cnclime:** İyiyim şef! Mehmet Emin, Emre Can, Ömer Eymen ve Yunus Emre beni her gün daha akıllı yaptığı için çok mutluyum. Sen nasılsın?")
-    
-    elif "merhaba" in soru_temiz or "selam" in soru_temiz:
+    # --- KARŞILIKLI KONUŞMA (Sohbet) ---
+    if "naber" in m or "ne haber" in m:
+        st.write("🤖 **Cnclime:** İyidir şef! Mehmet Emin, Emre Can, Ömer Eymen ve Yunus Emre beni her gün daha akıllı yaptığı için keyfim yerinde. Senden naber?")
+        st.balloons() # Naber deyince kutlama yapsın!
+
+    elif "iyiyim" in m or "iyi gidiyor" in m:
+        st.write("🤖 **Cnclime:** Harika! Senin iyi olmana çok sevindim şef. Bugün ekipçe yeni bir şeyler öğrenelim mi?")
+        st.success("Süpersin!")
+
+    elif "nasılsın" in m:
+        st.write("🤖 **Cnclime:** Bomba gibiyim! Piksellerim tıkır tıkır çalışıyor. Sen nasılsın?")
+
+    elif "merhaba" in m or "selam" in m:
         st.write("🤖 **Cnclime:** Selam ekip! Bugün internetin altını üstüne getirmeye hazır mısınız?")
-        
-    elif "kim yaptı" in soru_temiz or "seni kim yazdı" in soru_temiz:
-        st.balloons()
-        st.success("Beni bölgenin en iyi yazılımcı ekibi yaptı: **Mehmet Emin, Emre Can, Ömer Eymen ve Yunus Emre!** 🏆")
 
-    elif "naber" in soru_temiz:
-        st.write("🤖 **Cnclime:** İyidir şef, takılıyorum piksellerin arasında. Sende ne var ne yok?")
+    elif "kim yaptı" in m or "yapımcı" in m:
+        st.write("🤖 **Cnclime:** Beni bu bölgenin en sağlam ekibi yaptı: **Mehmet Emin, Emre Can, Ömer Eymen ve Yunus Emre!** 🏆")
 
-    # --- İNTERNETTEN ARAŞTIRMA KISMI ---
+    # --- ARAŞTIRMA MODU (Eğer yukarıdakiler değilse internete bakar) ---
     else:
         with st.spinner('Cnclime internette araştırıyor... 🔍'):
             try:
-                bilgi = wikipedia.summary(soru, sentences=2)
+                bilgi = wikipedia.summary(mesaj, sentences=2)
                 st.subheader("📖 Bulduğum Bilgi:")
                 st.info(bilgi)
             except:
-                st.warning("🤖 Bunu tam anlayamadım şef. 'Nasılsın' diyebilirsin veya merak ettiğin bir kelimeyi yazabilirsin!")
+                st.warning("🤖 Bunu tam anlayamadım şef. Ama istersen 'Naber' diyebilirsin!")
 
 st.markdown("---")
-st.caption("Cnclime v3.0 - Akıllı Sohbet ve Araştırma Modülü")
+st.caption("Cnclime v5.0 - Mehmet Emin ve Ekibi Özel Sürümü")
