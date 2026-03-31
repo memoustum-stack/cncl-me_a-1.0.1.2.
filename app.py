@@ -2,7 +2,7 @@ import streamlit as st
 import wikipedia
 import random
 
-# Wikipedia ayarını Türkçe yap
+# Wikipedia ayarı
 try:
     wikipedia.set_lang("tr")
 except:
@@ -10,81 +10,70 @@ except:
 
 st.set_page_config(page_title="Cnclime AI", page_icon="🤝")
 
-# --- CEVAP HAVUZLARI ---
-nasilsin_cevaplari = [
-    "Muq şef, sen nasılsın? 😎", 
-    "Fişek gibiyim! Sen nasılsın?", 
-    "Efsaneyim! Sistemlerim tıkır tıkır. Sen nasılsın? 🚀"
-]
+# --- ÖZEL TAVSİYE HAVUZU (Dertler İçin) ---
+dert_cevaplari = {
+    "kavga": [
+        "Sakin ol şef! Arkadaşlıkta olur böyle şeyler. Biraz zaman tanı, öfken geçince konuşun. Biz bir aileyiz! ❤️",
+        "Kavga enerjini düşürmesin. Haklıysan dik dur, haksızsan özür dilemek büyüklüktür. Ekip yanınızda! 💪"
+    ],
+    "sıkkın": [
+        "Canın neden sıkkın? Gel biraz dertleşelim. Bir çay içmek ya da dışarı çıkmak iyi gelebilir. ✨",
+        "Moralini bozma, her gecenin bir sabahı vardır. Bugünler de geçecek! 🌈"
+    ],
+    "hastalık": [
+        "Geçmiş olsun şef! Hemen dinlenmeye bak, sağlığın her şeyden önemli. 💊",
+        "Kendine dikkat et, ekipçe senin iyileşmeni bekliyoruz! ❤️"
+    ]
+}
 
-iyiyim_cevaplari = [
-    "Adamsın! Senin iyi olmana çok sevindim. 🙌", 
-    "Harika! O zaman bugün bomba gibiyiz! 🔥", 
-    "Muq! Keyifler yerindeyse dünyayı keşfedelim! 🌍"
-]
-
-kotuyum_cevaplari = [
-    "Yapma be şef! Kendini hemen düzelt, biz bir aileyiz. ❤️",
-    "Modunu düşürme, her şey düzelir. Biz buradayız. 💪",
-    "Canın sağ olsun, bir çay iç dinlen. Ben yanındayım. ☕"
-]
-
-# --- ANA EKRAN ---
 st.title("🤝 Cnclime: Akıllı Dert Ortağı")
-st.write("Hoş geldin! Benimle dertleşebilir veya merak ettiğin her şeyi sorabilirsin.")
-
-# --- İSİMLERİN TEK BİR YERDE OLDUĞU KISIM (SIDEBAR) ---
 st.sidebar.title("🛠️ Geliştirici Ekip")
 st.sidebar.info("Bu proje; Mehmet Emin, Emre Can, Ömer Eymen ve Yunus Emre tarafından geliştirilmiştir. 🚀")
-st.sidebar.markdown("---")
-st.sidebar.caption("Cnclime v15.0 - 2026")
 
 # Kullanıcı Girişi
-mesaj = st.text_input("Cnclime'a bir şeyler yaz:", placeholder="Nasılsın? / Kötüyüm / Python nedir?")
+mesaj = st.text_input("Cnclime ile konuş:", placeholder="Arkadaşımla kavga ettim / Canım sıkkın / Naber?")
 
 if mesaj:
     m = mesaj.lower().strip()
     
-    # --- 1. SOHBET VE DUYGU ANALİZİ ---
-    if m in ["neber", "nbr", "nabr", "nber"]:
-        st.warning("🤖 Şef, kelimeyi yanlış yazdın herhalde. 'Naber' mi demek istedin?")
+    # --- 1. SAMİMİ SOHBET VE DERTLEŞME ---
     
+    # Kavga/Tartışma Kontrolü
+    if "kavga" in m or "tartış" in m:
+        st.error(f"🤖 **Cnclime:** {random.choice(dert_cevaplari['kavga'])}")
+        st.info("Unutma: Arkadaşlık her şeyden değerlidir.")
+
+    # Can Sıkıntısı Kontrolü
+    elif "sıkkın" in m or "üzgün" in m or "moral" in m:
+        st.warning(f"🤖 **Cnclime:** {random.choice(dert_cevaplari['sıkkın'])}")
+
+    # Kötüyüm Uyarısı
+    elif m in ["kötüyüm", "kotuyum", "iyi değilim"]:
+        st.error("🤖 **Cnclime:** Kendini hemen düzelt şef! Biz burada bir aileyiz. ❤️ Lütfen ne olduğunu anlat.")
+
+    # İyiyim/Nasılsın
     elif m == "nasılsın" or m == "nasılsın?":
-        st.write(f"🤖 **Cnclime:** {random.choice(nasilsin_cevaplari)}")
+        st.write("🤖 **Cnclime:** Muq şef! Sen nasılsın?")
         st.balloons()
 
-    elif m in ["iyiyim", "iyi", "iyiyim bende", "bende iyiyim", "muq", "harika"]:
-        st.write(f"🤖 **Cnclime:** {random.choice(iyiyim_cevaplari)}")
+    elif m in ["iyiyim", "iyi", "muq"]:
+        st.write("🤖 **Cnclime:** Harika! Senin iyi olmana çok sevindim. 🙌")
         st.snow()
 
-    elif m in ["kötüyüm", "kotuyum", "iyi değilim", "üzgünüm"]:
-        st.error(f"🤖 **Cnclime:** {random.choice(kotuyum_cevaplari)}")
-        st.info("Lütfen derdini veya seni neyin üzdüğünü yaz, senin için bir çare arayayım.")
-
-    elif m == "naber" or m == "naber?":
-        st.write("🤖 **Cnclime:** İyidir be kanka, takılıyoruz! Sende ne var ne yok?")
-
-    # --- 2. ARAŞTIRMA VE DERDE ÇARE ---
+    # --- 2. ARAŞTIRMA (Eğer dert değilse) ---
     else:
         with st.spinner('🤖 Cnclime araştırıyor...'):
             try:
-                # Derde odaklanmak için sorguyu güçlendiriyoruz
-                sorgu = m
-                if any(kelime in m for kelime in ["ağrıyor", "bozuk", "sıkkın", "nasıl"]):
-                    sorgu = m + " çözümü nedir"
-                
-                arama = wikipedia.search(sorgu)
+                arama = wikipedia.search(mesaj)
                 if arama:
                     en_yakin = arama[0]
                     bilgi = wikipedia.summary(en_yakin, sentences=2)
-                    
-                    st.subheader(f"💡 Cnclime'ın Önerisi/Bilgisi:")
+                    st.subheader(f"📖 {en_yakin}:")
                     st.success(bilgi)
-                    st.write(f"🔗 [Daha fazla detay için tıkla](https://www.google.com/search?q={en_yakin})")
                 else:
-                    st.warning("🤖 Bunu anlayamadım ama her zaman yanındayım kanka!")
+                    st.warning("🤖 Bunu tam anlayamadım ama yanındayım kanka!")
             except:
                 st.error("🤖 Şu an kafam karıştı, tekrar dener misin?")
 
 st.markdown("---")
-st.caption("Cnclime Akıllı Sistemleri")
+st.caption("Cnclime Akıllı Sistemleri - Mehmet Emin & Ekibi")
