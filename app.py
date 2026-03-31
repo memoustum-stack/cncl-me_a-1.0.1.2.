@@ -90,4 +90,39 @@ elif mod == "🔢 Sayısal Mantık & Hesap":
                 temiz_islem = mat_input.replace('x', '*').replace(',', '.')
                 sonuc = eval(temiz_islem)
                 st.success(f"🤖 **Cnclime:** Bak {u_name}, bu işlemin sonucu tam olarak: **{sonuc}**")
-                # Küçük
+                # Küçük bir kutlama
+                if sonuc > 1000:
+                    st.balloons()
+            except:
+                st.error(f"🤖 **Cnclime:** Valla {u_name}, bu işlemi çözemedim. Sayıları doğru yazdığına emin misin şef?")
+
+# --- MOD 3: GÖRSEL OLUŞTUR (HAYAL ET) ---
+elif mod == "🎨 Görsel Oluştur (Hayal Et)":
+    st.write(f"Hayal et {u_name}, ben senin için betimleyeyim! Ne istersin?")
+    prompt = st.text_input("Hayalini buraya yaz:", key="v51_img")
+    
+    if prompt:
+        with st.spinner("Hayalini dijital dünyaya aktarıyorum..."):
+            time.sleep(2)
+            st.image(f"https://loremflickr.com/800/400/{prompt}", caption=f"Cnclime'ın {u_name} için hayal ettiği: {prompt}")
+            st.success(f"🤖 **Cnclime:** Nasıl olmuş {u_name}? Senin hayalin benim gerçeğim!")
+
+# --- MOD 4: AKILLI ARAŞTIRMA (SOHBETLİ) ---
+elif mod == "🔍 Akıllı Araştırma (Sohbetli)":
+    st.write(f"Merak ettiğin ne varsa sor {u_name}, seninle konuşarak anlatacağım!")
+    ara = st.text_input("Neyi öğrenelim?", key="v51_ara")
+    
+    if ara:
+        with st.spinner("Zihnimi ve verileri birleştiriyorum..."):
+            try:
+                res = wikipedia.summary(wikipedia.search(ara)[0], sentences=3)
+                st.info(f"🤖 **Cnclime:** Bak {u_name}, bu {ara} mevzusu aslında şöyle: {res}")
+            except:
+                st.error(f"🤖 **Cnclime:** {u_name}, bunu bulamadım ama bence senin bildiğin daha doğrudur!")
+
+# --- MOD 5: EKİP ---
+elif mod == "👥 Ekip":
+    st.success(f"🚀 **Cnclime Elite Team - v51**\n**👑 Mehmet Emin** (Lider) | **🔥 Emre Can** | **⚡ Ömer Eymen** | **🌟 Yunus Emre**")
+
+st.divider()
+st.caption(f"© 2026 Cnclime AI v51 | Tam Kapasite | Kullanıcı: {u_name}")
