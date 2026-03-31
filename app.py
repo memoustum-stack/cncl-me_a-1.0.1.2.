@@ -1,18 +1,14 @@
 import streamlit as st
 import wikipedia
 
-# Wikipedia ayarları - Türkçe ve Hata Korumalı
+# Wikipedia dili Türkçe
 try:
     wikipedia.set_lang("tr")
 except:
     pass
 
-# Sayfa Konfigürasyonu
-st.set_page_config(
-    page_title="Cnclime AI v33", 
-    page_icon="🍋", 
-    layout="wide"
-)
+# Sayfa Ayarları
+st.set_page_config(page_title="Cnclime AI v34", page_icon="🍋", layout="wide")
 
 # --- SİSTEM HAFIZASI ---
 if 'kullanici_adi' not in st.session_state:
@@ -20,13 +16,10 @@ if 'kullanici_adi' not in st.session_state:
 
 # --- GİRİŞ EKRANI ---
 if st.session_state.kullanici_adi == "":
-    st.title("🤖 Cnclime AI v33 🍋")
+    st.title("🤖 Cnclime AI v34 🍋")
     st.divider()
-    st.image("https://images.unsplash.com/photo-1590502160461-7f9a562dfd8b?q=80&w=400&auto=format&fit=crop", caption="Cnclime: Akıllı & Samimi", width=350)
-    
-    st.subheader("Selam şef! Önce ismini alalım.")
-    isim = st.text_input("İsmin nedir?", placeholder="Buraya yaz...", key="v33_login_box")
-    
+    st.image("https://images.unsplash.com/photo-1590502160461-7f9a562dfd8b?q=80&w=400&auto=format&fit=crop", width=350)
+    isim = st.text_input("İsmin nedir şef?", key="v34_login_input")
     if isim:
         st.session_state.kullanici_adi = isim.title()
         st.rerun()
@@ -35,16 +28,11 @@ if st.session_state.kullanici_adi == "":
 k_adi = st.session_state.kullanici_adi
 
 # --- MODLAR (SIDEBAR) ---
-st.sidebar.title(f"👋 Selam {k_adi}! 🍋")
+st.sidebar.title(f"👋 Selam {k_adi}!")
 st.sidebar.image("https://images.unsplash.com/photo-1568471120021-9966d540306c?q=80&w=150&auto=format&fit=crop", width=120)
-st.sidebar.divider()
+mod = st.sidebar.radio("Modlar", ["💬 Akıllı Sohbet", "🔍 Hatasız Araştırma", "🔢 Matematik Ustası", "👥 Ekip"])
 
-mod = st.sidebar.radio(
-    "Modlar", 
-    ["💬 Akıllı Sohbet (Bro Modu)", "🔍 Hatasız Araştırma", "🔢 Matematik Ustası", "👥 Geliştirici Ekip"]
-)
-
-if st.sidebar.button("🗑️ Çıkış / Reset"):
+if st.sidebar.button("🗑️ Çıkış"):
     st.session_state.kullanici_adi = ""
     st.rerun()
 
@@ -52,74 +40,59 @@ if st.sidebar.button("🗑️ Çıkış / Reset"):
 st.title(f"🍋 {mod}")
 st.divider()
 
-# --- MOD 1: AKILLI SOHBET (İNTERNETİ SADECE SOHBET İÇİN KULLANIR) ---
-if mod == "💬 Akıllı Sohbet (Bro Modu)":
-    st.write(f"Naber {k_adi} bro? Seninle takılmak için internetin altını üstüne getiririm ama sana hissettirmem! 😎")
-    user_input = st.text_input("Mesajını ateşle:", placeholder="Naber kanka? / Bugün ne yapsak?", key="v33_chat_input")
+# --- MOD 1: AKILLI SOHBET (ADAPTİF & GIYBET KARŞITI) ---
+if mod == "💬 Akıllı Sohbet":
+    st.write(f"Selam {k_adi}, seni dinliyorum.")
+    user_input = st.text_input("Mesajın:", key="v34_chat_input")
 
     if user_input:
         m = user_input.lower().strip()
         
-        with st.spinner("..."): # Gizli bir düşünme anı
-            # Sabit cevaplar
-            if any(x in m for x in ["naber", "nbr", "bro", "kanka"]):
-                st.info(f"🤖 **Cnclime:** İyidir {k_adi} bro, bomba gibiyim! Sen ne yapıyorsun, hayat nasıl gidiyor? 🔥")
-            elif "nasılsın" in m:
-                st.write(f"🤖 **Cnclime:** Muq {k_adi}! Seninle sohbet edince enerjim tavan yapıyor.")
-                st.balloons()
-            # Bilmediği bir şeyse internetten "Sohbet İlhamı" alır
+        # 1. GIYBET KONTROLÜ (KRAL VE DİĞERLERİ)
+        if "kral" in m or "duydun mu" in m or "şunun hakkında" in m:
+            st.warning(f"🤖 **Cnclime:** Bak {k_adi}, 'kral' falan diyoruz ama arkadan konuşmak gıybete girer. Biz burada bilgi paylaşalım, kimsenin gıybetini yapmayalım. Yakışmaz bize! ❤️")
+        
+        # 2. AYNA KURALI (SEN NE dersen o)
+        elif "bro" in m:
+            st.info(f"🤖 **Cnclime:** İyidir bro, takılıyoruz işte. Sende ne var ne yok?")
+        elif "naber" in m or "nbr" in m:
+            st.write(f"🤖 **Cnclime:** İyilik {k_adi}, senden naber? Çalışmalara devam.")
+        
+        # 3. SAÇMA CEVAP ENGELİ
+        else:
+            # Eğer sadece kısa bir selamsa internete bakma saçmalamasın
+            if len(m) < 5:
+                st.write(f"🤖 **Cnclime:** Efendim {k_adi}, buyur buradayım.")
             else:
-                try:
-                    search_res = wikipedia.search(m)
-                    if search_res:
-                        # Bilgiyi ders gibi değil, fikir gibi verir
-                        st.write(f"🤖 **Cnclime:** Valla {k_adi}, {m} konusu hakkında biraz düşündüm de... Gerçekten çok haklısın, bence de çok önemli bir mesele! Başka ne var ne yok?")
-                    else:
-                        st.write(f"🤖 **Cnclime:** {k_adi} bro, tam anlayamadım ama senin anlatışın yeter, devam et!")
-                except:
-                    st.write(f"🤖 **Cnclime:** {k_adi} bro, bağlantı biraz zayıf ama seni dinliyorum.")
+                st.write(f"🤖 **Cnclime:** Anladım {k_adi}, bu konuyu biraz daha açmak ister misin? Yoksa araştırmamı mı istersin?")
 
-# --- MOD 2: HATASIZ ARAŞTIRMA (BİLGİ CANAVARI) ---
+# --- MOD 2: HATASIZ ARAŞTIRMA ---
 elif mod == "🔍 Hatasız Araştırma":
-    st.write(f"Ciddi bir şey mi öğreneceğiz {k_adi}? Tam yerindesin, hata payı sıfır! 🕵️‍♂️")
-    ara_input = st.text_input("Öğrenmek istediğin her şeyi yaz:", placeholder="Örn: Yapay zeka nasıl çalışır?", key="v33_research_input")
-
+    ara_input = st.text_input("Öğrenmek istediğin konu:", key="v34_res_input")
     if ara_input:
-        with st.spinner("🕵️‍♂️ En doğru bilgiyi bulup getiriyorum..."):
+        with st.spinner("🕵️‍♂️ En doğru bilgi taranıyor..."):
             try:
-                # Daha keskin bir arama için sorguyu temizliyoruz
+                # Rastgele değil, en alakalı sonucu getirir
                 wiki_search = wikipedia.search(ara_input)
                 if wiki_search:
-                    # En alakalı ilk sonucu tam doğrulukla getirir
-                    detayli_bilgi = wikipedia.summary(wiki_search[0], sentences=4)
-                    st.success(f"🤖 **Cnclime Bilgi Deposu:**")
-                    st.write(detayli_bilgi)
-                    st.markdown("---")
-                    st.caption(f"📍 Kaynak: {wiki_search[0]} | Doğruluk Payı: %100")
+                    bilgi = wikipedia.summary(wiki_search[0], sentences=3)
+                    st.success(f"🤖 **Doğru Bilgi:**")
+                    st.write(bilgi)
                 else:
-                    st.error(f"🤖 Üzgünüm {k_adi}, bu konuda internette güvenilir bir veri bulamadım.")
-            except wikipedia.exceptions.DisambiguationError as e:
-                st.warning(f"🤖 {k_adi}, bu konu çok geniş! Şunlardan hangisini demek istedin: {e.options[:3]}")
-            except Exception:
-                st.error("🤖 Bir şeyler ters gitti ama düzelteceğim. Tekrar dener misin şef?")
+                    st.error("Buna dair bir veri bulamadım.")
+            except:
+                st.error("Bir hata oluştu, lütfen konuyu sade yaz.")
 
-# --- MOD 3: MATEMATİK USTASI ---
+# --- DİĞER MODLAR ---
 elif mod == "🔢 Matematik Ustası":
-    st.write(f"Hesap kitap işleri bende {k_adi}! 🧠")
-    mat_input = st.text_input("İşlemi buraya yaz:", key="v33_math_input")
-    if mat_input:
+    mat = st.text_input("İşlem:", key="v34_math")
+    if mat:
         try:
-            # Matematiksel karakterleri düzeltiyoruz
-            calc = mat_input.replace("x", "*").replace(",", ".")
-            res = eval(calc)
-            st.success(f"🤖 **Sonuç:** {res}")
-        except:
-            st.error("Hesaplayamadım şef, sayıları kontrol et.")
+            st.success(f"Sonuç: {eval(mat.replace('x', '*'))}")
+        except: st.error("Hata!")
 
-# --- MOD 4: EKİP ---
-elif mod == "👥 Geliştirici Ekip":
+elif mod == "👥 Ekip":
     st.success("👑 Mehmet Emin | 🔥 Emre Can | ⚡ Ömer Eymen | 🌟 Yunus Emre")
-    st.info("Cnclime: Biz bir aileyiz! ❤️")
 
 st.divider()
-st.caption(f"© 2026 Cnclime | v33 Akıllı & Hatasız Sürüm | Kullanıcı: {k_adi}")
+st.caption(f"© 2026 Cnclime | v34 | Kullanıcı: {k_adi}")
